@@ -6,19 +6,21 @@ const { CronJob } = require('cron')
 
 const bot = new Telegraf(process.env.TG_BOT_TOKEN)
 
+const SERVICE_COMMANDS = ['/stat'];
+
 const getUser = (ctx) => ctx?.update.message?.from || ctx?.update.callback_query?.from || {}
 
-const funnelReply = async (ctx, userId, msgId, isMailing = false) => {
+const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) => {
   const funnelMsgGroup = FUNNEL_MSG[msgId]
 
-  console.log(3, msgId)
+  // console.log(3, msgId)
 
   if (!funnelMsgGroup?.length) return msgId
 
   // Если следующее сообщение - сообщение начала дня - не отправляем его, т.к. оно отправится через CronJob
   if (!isMailing && NEW_DAY_MSG_IDS.includes(msgId)) return msgId
 
-  console.log(4, userId)
+  // console.log(4, userId)
 
   /*
     !!! Внимание !!!
@@ -26,6 +28,8 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false) => {
     потому что пересылка картинок, аудиофайлов и т.д. без ctx пока не поддерживается
   */
   const sendMessage = (msg) => ctx?.reply(...msg) || bot.telegram.sendMessage(userId, ...msg)
+
+  console.log('msgId', msgId);
 
   funnelMsgGroup.forEach((msg, index) => {
     setTimeout(async () => {
@@ -46,13 +50,72 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false) => {
           break;
 
         case 11:
-          // await ctx.replyWithAnimation('CgACAgIAAxkBAAIBEGXTu4RvKK9jL8icAeSmaYQyyoCQAAKcPwACQRahSuNoP7eVxekiNAQ')  // квадратная маленькая анимация
           await ctx.replyWithPhoto('AgACAgIAAxkBAAIBdWXT1XL2yydrO320XE_81IDDsNeEAAIU1jEbQRahSvZ9s4tqRsEgAQADAgADeQADNAQ')
           ctx.reply(...msg)
           break;
           
         case 15:
           await ctx.replyWithVoice('AwACAgIAAxkBAAIBImXTvZ0H3QQxtPDt-5lSwG1jgumXAAIvQgAClmJQSivzax2NFv0KNAQ')
+          ctx.reply(...msg)
+          break;
+
+        case 22:
+          await ctx.replyWithVoice('AwACAgIAAxkBAANpZdZy6jzslbdZj7TTy_mJsK5jZxQAAsM_AAJLlrlKiLlEXi99qq80BA')
+          ctx.reply(...msg)
+          break;
+
+        case 23:
+          await ctx.replyWithPhoto('AgACAgIAAxkBAANsZdZ35Aoa-u5PKuKcFheN8VCs17UAAureMRvWaLBKoYq9jzWwyOUBAAMCAAN5AAM0BA')
+          ctx.reply(...msg)
+          break;
+
+        case 24:
+          // отправляем фото в зависимости от варианта ответа
+          switch (actionNumber) {
+            case 1:
+              await ctx.replyWithPhoto('AgACAgIAAxkBAANuZdZ4H9ZlHY6XNZaKgXp4uapfVYsAAuveMRvWaLBKl6Mo7uMI68sBAAMCAAN5AAM0BA')
+              ctx.reply(...msg)
+              break;
+              
+            case 2:
+              await ctx.replyWithPhoto('AgACAgIAAxkBAANwZdZ4MsPTSewKn3iDFtM68osHKO8AAuzeMRvWaLBKXHUNyfiLBdQBAAMCAAN5AAM0BA')
+              ctx.reply(...msg)
+              break;
+              
+            case 3:
+              await ctx.replyWithPhoto('AgACAgIAAxkBAANyZdZ4P1-G76vFeZOwjI5mW_7vv3QAAu3eMRvWaLBK8ckQRhcHiKwBAAMCAAN5AAM0BA')
+              ctx.reply(...msg)
+              break;
+          }
+          break;
+
+        case 25:
+          await ctx.replyWithPhoto('AgACAgIAAxkBAAIBDWXXytWg3KBCMvi1Md77NFAX4LCOAAJP3DEbsXvBSikoWG0T7OCQAQADAgADeQADNAQ')
+          ctx.reply(...msg)
+          break;
+
+        case 26:
+          // отправляем фото в зависимости от варианта ответа
+          switch (actionNumber) {
+            case 1:
+              await ctx.replyWithPhoto('AgACAgIAAxkBAAIBD2XXyyTXDPwuZonWHWNl1PrT0_PfAAJT3DEbsXvBSoWytYj0pSbUAQADAgADeQADNAQ')
+              ctx.reply(...msg)
+              break;
+              
+            case 2:
+              await ctx.replyWithPhoto('AgACAgIAAxkBAAIBEWXXyzhc3ZmlbDqjgCwm3w3LmBk5AAJU3DEbsXvBSvnP0wWMRlJMAQADAgADeQADNAQ')
+              ctx.reply(...msg)
+              break;
+              
+            case 3:
+              await ctx.replyWithPhoto('AgACAgIAAxkBAAIBE2XXy0WH2FrZZ0kd1vay0naGXNsSAAJV3DEbsXvBStAG7B_14b-3AQADAgADeQADNAQ')
+              ctx.reply(...msg)
+              break;
+          }
+          break;
+
+        case 29:
+          await ctx.replyWithVoice('AwACAgIAAxkBAAN0ZdZ4gnirME6VYXxgEjIFlXM_wM0AAi9FAAL18qBKzLecJUXENjM0BA')
           ctx.reply(...msg)
           break;
 
@@ -93,9 +156,10 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false) => {
   return newFunnelMsgId
 }
 
-const onMsgReceive = async (ctx, userId, isMsgAnswer = false, isMailing = false) => {
+const onMsgReceive = async (ctx, userId, isMsgAnswer = false, isMailing = false, actionNumber) => {
   // console.log(ctx)
-  console.log(ctx?.update.message)
+
+  if (ctx?.update.message) console.log('ctx?.update.message', ctx?.update.message)
 
   const user = getUser(ctx)
 
@@ -120,21 +184,49 @@ const onMsgReceive = async (ctx, userId, isMsgAnswer = false, isMailing = false)
 
     bot.telegram.sendMessage(process.env.ADMIN_CHAT, `Новый пользователь - @${user.username} (${user.first_name})`)
   }
-  
+
   // Если пользователь прислал сообщение, а не нажал на кнопку и на сообщение не ожидается ответ пользователя - не продолжаем воронку
   if (isMsgAnswer && !WAIT_ANSWER_MSG_IDS.includes(latestFunnelMsg)) return latestFunnelMsg
 
-  funnelReply(ctx, userId, latestFunnelMsg, isMailing)
+  funnelReply(ctx, userId, latestFunnelMsg, isMailing, actionNumber)
 }
 
 bot.start(async (ctx) => onMsgReceive(ctx))
 
+bot.action('next_msg_1', async (ctx) => onMsgReceive(ctx, undefined, undefined, undefined, 1))
+bot.action('next_msg_2', async (ctx) => onMsgReceive(ctx, undefined, undefined, undefined, 2))
+bot.action('next_msg_3', async (ctx) => onMsgReceive(ctx, undefined, undefined, undefined, 3))
 bot.action('next_msg', async (ctx) => onMsgReceive(ctx))
+
+bot.command('stat', async (ctx) => {
+  const user = getUser(ctx)
+  const adminIds = process.env.ADMIN_IDS.split(',')
+
+  if (!adminIds.includes(user.id?.toString())) return
+
+  const usersdb = await usersModel.find()
+
+  const usersByDay = NEW_DAY_MSG_IDS.map(value => usersdb?.filter(user => user.latestFunnelMsg >= value))
+  
+  let msgStat = `Пользователей всего — ${usersdb?.length || 0}\n`
+
+  usersByDay.forEach((users, i) => {
+    const prevUsers = i === 0 ? usersdb?.length : usersByDay[i - 1]?.length
+    const currentUsers = users?.length || 0
+    const percent = ((currentUsers * 100) / prevUsers).toFixed(0)
+
+    msgStat += `День ${i} — ${currentUsers} чел. (${percent}%)\n`
+  })
+
+  ctx.reply(msgStat, { parse_mode: 'markdown' })
+})
 
 bot.on('message', async (ctx) => {
   // console.log(ctx.update)
   // console.log(ctx.update.message.chat)
   // console.log(ctx.update.message.reply_to_message)
+
+  if (SERVICE_COMMANDS.includes(ctx.update.message.text)) return
 
   const fromChatId = ctx.update.message.chat.id
 
@@ -150,7 +242,8 @@ bot.on('message', async (ctx) => {
       ctx.reply(SERVICE_MSG.reply_not_allow(ctx.update.message.reply_to_message.forward_sender_name), { parse_mode: 'markdown' })
     }
   } else {
-    ctx.forwardMessage(process.env.ADMIN_CHAT)
+    if (Boolean(process.env.IS_PROD)) ctx.forwardMessage(process.env.ADMIN_CHAT)
+
     ctx.reply(BOT_MSG.reply, { parse_mode: 'markdown' })
 
     onMsgReceive(ctx, null, true)
@@ -160,23 +253,24 @@ bot.on('message', async (ctx) => {
 
 const job = CronJob.from({
 	cronTime: '0 */1 * * *',  // каждый час
-	// cronTime: '*/1 * * * *',  // каждый час
+	// cronTime: '*/1 * * * *',  // каждую минуту
 	onTick: async function () {
     // достаем всех пользователей, у которых следующее сообщение из воронки - 9
-    const usersdb = await usersModel.find({ latestFunnelMsg: { $in: [9] } })
+    const usersdb = await usersModel.find({ latestFunnelMsg: { $in: NEW_DAY_MSG_IDS } })
     console.log(usersdb?.length)
 
     if (!usersdb?.length) return
 
     usersdb.forEach(user => {
       const latestFunnelDate = new Date(user.latestFunnelDate)  // дата последнего отправленного ботом сообщения из воронки
+      const latestFunnelHour = latestFunnelDate.getHours()
       const currentDate = new Date()   // текущая дата
       const currentHour = currentDate.getHours()  // текущий час
 
-      console.log(1, currentDate.getDate(), latestFunnelDate.getDate())
+      console.log(1, currentDate.getDate(), latestFunnelDate.getDate(), latestFunnelHour)
 
       // если число месяца последнего сообщения совпадает с текущим - пропускаем пользователя
-      if (currentDate.getDate() === latestFunnelDate.getDate()) return
+      if (currentDate.getDate() === latestFunnelDate.getDate() && latestFunnelHour > 5) return
 
       console.log(2, currentHour, user.startDayHour)
 

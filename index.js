@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const { TgBot } = require('./bot')
 
 const start = async () => {
-  const dbUrl = process.env.IS_PROD
+  const dbUrl = Boolean(process.env.IS_PROD)
     ? process.env.DB_URL
     : process.env.DB_LOCAL_URL
   
