@@ -258,7 +258,7 @@ bot.on('message', async (ctx) => {
   } else {
     const user = getUser(ctx)
 
-    if (Boolean(process.env.IS_PROD) && ADMIN_IDS[0] === user.id?.toString()) ctx.forwardMessage(process.env.ADMIN_CHAT)
+    if (Boolean(process.env.IS_PROD) && ADMIN_IDS[0] !== user.id?.toString()) ctx.forwardMessage(process.env.ADMIN_CHAT)
 
     if (ADMIN_IDS[0] === user.id?.toString()) ctx.reply(JSON.stringify(ctx?.update.message, null, 2))
 
