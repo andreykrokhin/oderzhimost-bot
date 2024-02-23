@@ -65,12 +65,12 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) 
             break;
   
           case 22:
-            await ctx.replyWithVoice('AwACAgIAAxkBAANpZdZy6jzslbdZj7TTy_mJsK5jZxQAAsM_AAJLlrlKiLlEXi99qq80BA')
+            await ctx.replyWithVoice('AwACAgIAAxkBAAITMWXYsqxLGZAmSCGNAW5fNTTx4e-IAALDPwACS5a5SqNc8ixJ0zcpNAQ')
             ctx.reply(...msg)
             break;
   
           case 23:
-            await ctx.replyWithPhoto('AgACAgIAAxkBAANsZdZ35Aoa-u5PKuKcFheN8VCs17UAAureMRvWaLBKoYq9jzWwyOUBAAMCAAN5AAM0BA')
+            await ctx.replyWithPhoto('AgACAgIAAxkBAAITNGXYsv2ObCa2D1fPAhhXezLZpRL9AALq3jEb1miwSu-O8l7tBMNqAQADAgADeQADNAQ')
             ctx.reply(...msg)
             break;
   
@@ -78,24 +78,24 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) 
             // отправляем фото в зависимости от варианта ответа
             switch (actionNumber) {
               case 1:
-                await ctx.replyWithPhoto('AgACAgIAAxkBAANuZdZ4H9ZlHY6XNZaKgXp4uapfVYsAAuveMRvWaLBKl6Mo7uMI68sBAAMCAAN5AAM0BA')
+                await ctx.replyWithPhoto('AgACAgIAAxkBAAITN2XYsyziDaFNTiO1djWbEWN4F-TJAALr3jEb1miwSqjhafgRl4yzAQADAgADeQADNAQ')
                 ctx.reply(...msg)
                 break;
                 
               case 2:
-                await ctx.replyWithPhoto('AgACAgIAAxkBAANwZdZ4MsPTSewKn3iDFtM68osHKO8AAuzeMRvWaLBKXHUNyfiLBdQBAAMCAAN5AAM0BA')
+                await ctx.replyWithPhoto('AgACAgIAAxkBAAITOmXYsz8P_rD6OThFwvhs7igX9VxPAALs3jEb1miwSoc8wDOl0j4XAQADAgADeQADNAQ')
                 ctx.reply(...msg)
                 break;
                 
               case 3:
-                await ctx.replyWithPhoto('AgACAgIAAxkBAANyZdZ4P1-G76vFeZOwjI5mW_7vv3QAAu3eMRvWaLBK8ckQRhcHiKwBAAMCAAN5AAM0BA')
+                await ctx.replyWithPhoto('AgACAgIAAxkBAAITPWXYs2jjAAGPcKfkQoDY5uIohkcOjgAC7d4xG9ZosEpjnYT_A9TGfwEAAwIAA3kAAzQE')
                 ctx.reply(...msg)
                 break;
             }
             break;
   
           case 25:
-            await ctx.replyWithPhoto('AgACAgIAAxkBAAIBDWXXytWg3KBCMvi1Md77NFAX4LCOAAJP3DEbsXvBSikoWG0T7OCQAQADAgADeQADNAQ')
+            await ctx.replyWithPhoto('AgACAgIAAxkBAAITQ2XYs8D_AAFQ6xGYfFM-Wq0J4lwQsAACT9wxG7F7wUpp0thLlhYKvgEAAwIAA3kAAzQE')
             ctx.reply(...msg)
             break;
   
@@ -103,24 +103,24 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) 
             // отправляем фото в зависимости от варианта ответа
             switch (actionNumber) {
               case 1:
-                await ctx.replyWithPhoto('AgACAgIAAxkBAAIBD2XXyyTXDPwuZonWHWNl1PrT0_PfAAJT3DEbsXvBSoWytYj0pSbUAQADAgADeQADNAQ')
+                await ctx.replyWithPhoto('AgACAgIAAxkBAAITRmXYs9INxaV70kWQqzvQRyySk-VCAAJT3DEbsXvBSpMCVnUCl2xwAQADAgADeQADNAQ')
                 ctx.reply(...msg)
                 break;
                 
               case 2:
-                await ctx.replyWithPhoto('AgACAgIAAxkBAAIBEWXXyzhc3ZmlbDqjgCwm3w3LmBk5AAJU3DEbsXvBSvnP0wWMRlJMAQADAgADeQADNAQ')
+                await ctx.replyWithPhoto('AgACAgIAAxkBAAITSWXYs-PjNhZ0AalefAJJhv2GvVuAAAJU3DEbsXvBSiVc0elERnhsAQADAgADeQADNAQ')
                 ctx.reply(...msg)
                 break;
                 
               case 3:
-                await ctx.replyWithPhoto('AgACAgIAAxkBAAIBE2XXy0WH2FrZZ0kd1vay0naGXNsSAAJV3DEbsXvBStAG7B_14b-3AQADAgADeQADNAQ')
+                await ctx.replyWithPhoto('AgACAgIAAxkBAAITTGXYs_Xy_entCWC54GoeFFNKjpAuAAJV3DEbsXvBSoTFpRCIfwr0AQADAgADeQADNAQ')
                 ctx.reply(...msg)
                 break;
             }
             break;
   
           case 29:
-            await ctx.replyWithVoice('AwACAgIAAxkBAAN0ZdZ4gnirME6VYXxgEjIFlXM_wM0AAi9FAAL18qBKzLecJUXENjM0BA')
+            await ctx.replyWithVoice('AwACAgIAAxkBAAITQGXYs6CczhYVITSd5zXGuF6EA8NzAAIvRQAC9fKgSrmqSdbWt2pzNAQ')
             ctx.reply(...msg)
             break;
   
