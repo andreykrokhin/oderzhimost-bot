@@ -8,6 +8,7 @@ const bot = new Telegraf(process.env.TG_BOT_TOKEN)
 
 const SERVICE_COMMANDS = ['/stat']
 const ADMIN_IDS = process.env.ADMIN_IDS.split(',')
+const IS_PROD = Boolean(process.env.IS_PROD)
 
 const getUser = (ctx) => ctx?.update.message?.from || ctx?.update.callback_query?.from || {}
 
@@ -16,19 +17,24 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) 
 
   // console.log(3, msgId)
 
-  if (!funnelMsgGroup?.length) return msgId
-
-  // Если следующее сообщение - сообщение начала дня - не отправляем его, т.к. оно отправится через CronJob
-  if (!isMailing && NEW_DAY_MSG_IDS.includes(msgId)) return msgId
-
-  // console.log(4, userId)
-
   /*
     !!! Внимание !!!
     ctx не передается при вызове из CronJob. Номера сообщений в таком случае не должны совпадать с номерами из switch ниже
     потому что пересылка картинок, аудиофайлов и т.д. без ctx пока не поддерживается
   */
   const sendMessage = (msg) => ctx?.reply(...msg) || bot.telegram.sendMessage(userId, ...msg)
+
+  if (!funnelMsgGroup?.length) return msgId
+
+  // Если следующее сообщение - сообщение начала дня - не отправляем его, т.к. оно отправится через CronJob
+  if (!isMailing && NEW_DAY_MSG_IDS.includes(msgId)) return msgId
+
+  // Если сработал CronJob, но пользователь не дошел до конца дня
+  if (isMailing && !NEW_DAY_MSG_IDS.includes(msgId)) {
+    sendMessage(BOT_MSG.funnel_reminder, { parse_mode: 'markdown' })
+  }
+
+  // console.log(4, userId)
 
   console.log('msgId', msgId);
 
@@ -124,6 +130,61 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) 
             ctx.reply(...msg)
             break;
   
+          case 37:
+            await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIU7mXZEW2dzUzSwYN1J9kHDwAB_tYzjQACvUAAAsrz0UrX4ckV4YOfHTQE' : 'AwACAgIAAxkBAAIBbWXbfYVy4QrWfUPAmzAGdQdjNF67AAK9QAACyvPRSpo0R5WAvUgcNAQ')
+            ctx.reply(...msg)
+            break;
+  
+          case 39:
+            await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIU8WXZFRXR8APHkCvHkLjUP6ncOoBUAALcQAACyvPRSoLnKJZ_Bf8oNAQ' : 'AwACAgIAAxkBAAIBdWXbfhV8btH9kgpzpYN6x2fbxsxQAALcQAACyvPRStfWi6HOjzwsNAQ')
+            ctx.reply(...msg)
+            break;
+  
+          case 45:
+            await ctx.replyWithPhoto(IS_PROD ? 'AgACAgIAAxkBAAIVGWXZJeZAJPxWsLPupxnfNAw4-UbaAAJY1TEbyvPRSst99UEheIx6AQADAgADeQADNAQ' : 'AgACAgIAAxkBAAIBhGXbfu0sCu2OujXeOZns1k5x6QF5AAJY1TEbyvPRSl7OzLMWqC7uAQADAgADeQADNAQ')
+            ctx.reply(...msg)
+            break;
+  
+          case 46:
+            // отправляем фото в зависимости от варианта ответа
+            switch (actionNumber) {
+              case 1:
+                await ctx.replyWithPhoto(IS_PROD ? 'AgACAgIAAxkBAAIVHGXZJgKrgLWSjzN-8dPHxuSlSFPkAAJZ1TEbyvPRSpdvKz-mkepFAQADAgADeQADNAQ' : 'AgACAgIAAxkBAAIBh2XbfwKnHHJPoL4bxTEVL64NCSODAAJZ1TEbyvPRSosfKBnDfVJ7AQADAgADeQADNAQ')
+                ctx.reply(...msg)
+                break;
+                
+              case 2:
+                await ctx.replyWithPhoto(IS_PROD ? 'AgACAgIAAxkBAAIVH2XZJhT89ewCPqw0EkpnCE7s4RfUAAJa1TEbyvPRSrb9LAE8l5p_AQADAgADeQADNAQ' : 'AgACAgIAAxkBAAIBimXbfxa0D5Ng9PCgn4WpKUf8x07vAAJa1TEbyvPRSvh6KvTrDAWRAQADAgADeQADNAQ')
+                ctx.reply(...msg)
+                break;
+                
+              case 3:
+                await ctx.replyWithPhoto(IS_PROD ? 'AgACAgIAAxkBAAIVImXZJiQgq0i2lrfofcVBK0V7Q4YYAAJb1TEbyvPRSkJTdnJ_XJb6AQADAgADeQADNAQ' : 'AgACAgIAAxkBAAIBjWXbfyl33WW3idWunApyS3IpdWjqAAJb1TEbyvPRSh-eiOEKKbFZAQADAgADeQADNAQ')
+                ctx.reply(...msg)
+                break;
+            }
+            break;
+  
+          case 50:
+            await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIVC2XZH9q_kQQIF-Bm1ayXOJQBf6j9AALuQAACyvPRShiUVER6EPxoNAQ' : 'AwACAgIAAxkBAAIBe2Xbfn-Ji9lstiwV0_A0cYtQPQndAALuQAACyvPRSpf3gQxnkm6bNAQ')
+            ctx.reply(...msg)
+            break;
+  
+          case 53:
+            await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIVCGXZH6neMtwV8WOtZN0YOsbL_OlSAALtQAACyvPRSoW_0qzJhbpVNAQ' : 'AwACAgIAAxkBAAIBeGXbfmN3OXUR-zt_mDTke0u7OT1xAALtQAACyvPRSgR6_oRQuEqiNAQ')
+            ctx.reply(...msg)
+            break;
+  
+          case 60:
+            await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIVDmXZIAVgd0aEWkTSkyfdb7UP3uKrAAL6QAACyvPRSg37-kjY3tOlNAQ' : 'AwACAgIAAxkBAAIBfmXbfqMtnTMIoMB7mJJjGYpVBQaMAAL6QAACyvPRSu07Rxy2afR_NAQ')
+            ctx.reply(...msg)
+            break;
+  
+          case 63:
+            await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIVFmXZI-VFpETEwhw6nmvWtxu11VqJAAIHQQACyvPRSjyIEeHCFGIHNAQ' : 'AwACAgIAAxkBAAIBgWXbftSc1sM0JHXiRyx71y1dlr6yAAIHQQACyvPRSgABjPqAiauPWjQE')
+            ctx.reply(...msg)
+            break;
+  
           // case 5:
           //   ctx.editMessageText(...msg)
             
@@ -149,6 +210,10 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) 
         }
       } catch (e) {
         isCatchedError = true
+
+        if (e?.response?.description?.indexOf('VOICE_MESSAGES_FORBIDDEN')) {
+          sendMessage(BOT_MSG.voice_not_allow, { parse_mode: 'markdown' })
+        }
 
         bot.telegram.sendMessage(ADMIN_IDS[0],
 `Ошибка при отправке сообщения #${msgId}:
@@ -197,7 +262,9 @@ const onMsgReceive = async (ctx, userId, isMsgAnswer = false, isMailing = false,
       startDayHour: 10,
     })
 
-    bot.telegram.sendMessage(process.env.ADMIN_CHAT, `Новый пользователь - @${user.username} (${user.first_name})`)
+    const username = user.username ? `@${user.username} (${user.first_name})` : user.first_name
+
+    bot.telegram.sendMessage(process.env.ADMIN_CHAT, `Новый пользователь - ${username}`)
   }
 
   // Если пользователь прислал сообщение, а не нажал на кнопку и на сообщение не ожидается ответ пользователя - не продолжаем воронку
@@ -227,9 +294,30 @@ bot.command('stat', async (ctx) => {
   usersByDay.forEach((users, i) => {
     const prevUsers = i === 0 ? usersdb?.length : usersByDay[i - 1]?.length
     const currentUsers = users?.length || 0
-    const percent = ((currentUsers * 100) / prevUsers).toFixed(0)
+    const percent = (((currentUsers * 100) / prevUsers) || 0).toFixed(0)
 
     msgStat += `День ${i} — ${currentUsers} чел. (${percent}%)\n`
+  })
+
+  ctx.reply(msgStat, { parse_mode: 'markdown' })
+})
+
+bot.command('statm', async (ctx) => {
+  const user = getUser(ctx)
+
+  if (!ADMIN_IDS.includes(user.id?.toString())) return
+
+  const usersdb = await usersModel.find()
+
+  const usersByMsg = FUNNEL_MSG.map(value => usersdb?.filter(user => user.latestFunnelMsg === value))
+  
+  let msgStat = ``
+
+  usersByMsg.forEach((users, i) => {
+    const currentUsers = users?.length || 0
+    const percent = (((currentUsers * 100) / usersdb?.length) || 0).toFixed(0)
+
+    msgStat += `#${i} — ${currentUsers} чел. (${percent}%)\n`
   })
 
   ctx.reply(msgStat, { parse_mode: 'markdown' })
@@ -251,14 +339,23 @@ bot.on('message', async (ctx) => {
     // console.log(fromChatId, replyMsgId, msg)
 
     if (replyMsgId) {
-      bot.telegram.sendMessage(replyMsgId, msg)
+      try {
+        bot.telegram.sendMessage(replyMsgId, msg)
+      } catch (e) {
+        isCatchedError = true
+
+        bot.telegram.sendMessage(ADMIN_IDS[0],
+`Ошибка при отправке ответа пользователю:
+
+${JSON.stringify(e, null, 2)}`)
+      }
     } else {
       ctx.reply(SERVICE_MSG.reply_not_allow(ctx.update.message.reply_to_message.forward_sender_name), { parse_mode: 'markdown' })
     }
   } else {
     const user = getUser(ctx)
 
-    if (Boolean(process.env.IS_PROD) && ADMIN_IDS[0] !== user.id?.toString()) ctx.forwardMessage(process.env.ADMIN_CHAT)
+    if (IS_PROD && ADMIN_IDS[0] !== user.id?.toString()) ctx.forwardMessage(process.env.ADMIN_CHAT)
 
     if (ADMIN_IDS[0] === user.id?.toString()) ctx.reply(JSON.stringify(ctx?.update.message, null, 2))
 
