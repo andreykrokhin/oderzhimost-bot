@@ -309,7 +309,7 @@ bot.command('statm', async (ctx) => {
 
   const usersdb = await usersModel.find()
 
-  const usersByMsg = FUNNEL_MSG.map(value => usersdb?.filter(user => user.latestFunnelMsg === value))
+  const usersByMsg = FUNNEL_MSG.map((_v, key) => usersdb?.filter(user => user.latestFunnelMsg === key))
   
   let msgStat = ``
 
