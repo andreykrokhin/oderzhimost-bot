@@ -30,9 +30,9 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) 
   if (!isMailing && NEW_DAY_MSG_IDS.includes(msgId)) return msgId
 
   // Если сработал CronJob, но пользователь не дошел до конца дня
-  if (isMailing && !NEW_DAY_MSG_IDS.includes(msgId)) {
-    sendMessage(BOT_MSG.funnel_reminder, { parse_mode: 'markdown' })
-  }
+  // if (isMailing && !NEW_DAY_MSG_IDS.includes(msgId)) {
+  //   sendMessage(BOT_MSG.funnel_reminder, { parse_mode: 'markdown' })
+  // }
 
   // console.log(4, userId)
 
