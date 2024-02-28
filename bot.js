@@ -1,7 +1,7 @@
 const { Telegraf, Markup } = require('telegraf')
 
 const usersModel = require('./models/users-model')
-const { FUNNEL_MSG, BOT_MSG, SERVICE_MSG, NEW_DAY_MSG_IDS, WAIT_ANSWER_MSG_IDS } = require('./locale')
+const { FUNNEL_MSG, BOT_MSG, SERVICE_MSG, NEW_DAY_MSG_IDS, WAIT_ANSWER_MSG_IDS, PAID_MSG } = require('./locale')
 const { CronJob } = require('cron')
 
 const bot = new Telegraf(process.env.TG_BOT_TOKEN)
@@ -12,10 +12,16 @@ const IS_PROD = Boolean(process.env.IS_PROD)
 
 const getUser = (ctx) => ctx?.update.message?.from || ctx?.update.callback_query?.from || {}
 
-const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) => {
-  const funnelMsgGroup = FUNNEL_MSG[msgId]
+const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber, paidModule) => {
+  const paidMsgAvailable = PAID_MSG.slice(0, paidModule)?.flat()
+  const funnelMsgAll = [...FUNNEL_MSG, ...paidMsgAvailable]
+
+  const funnelMsgGroup = funnelMsgAll[msgId]
 
   // console.log(3, msgId)
+  
+  // ** Если произошла ошибка при попытке отправить сообщение - помечаем флагом и не продвигаем по воронке
+  let isCatchedError = false
 
   /*
     !!! Внимание !!!
@@ -38,46 +44,43 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) 
 
   console.log('msgId', msgId);
 
-  // ** Если произошла ошибка при попытке отправить сообщение - помечаем флагом и не продвигаем по воронке
-  let isCatchedError = false
-
   funnelMsgGroup.forEach((msg, index) => {
     setTimeout(async () => {
       try {
         switch (msgId) {
           case 1:
             await ctx.replyWithAnimation('CgACAgIAAxkBAAOmZcqgiJaaVvN5HsTVWzavF-K1dNUAAho9AALVY1lKRCLmnGeAo_U0BA')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
             
           case 8:
             await ctx.replyWithVoice('CQACAgIAAxkBAAPMZcql3-feZ94R1cC9NTHsTjdCpd0AAphLAAJ_llFKs9_Foy5GWiQ0BA')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
             
           case 10:
             await ctx.replyWithVoice('CQACAgIAAxkBAAIBC2XTurjCKJY4mRbvbsHm0tXElp4yAAKPPwACQRahShPRowGokLyRNAQ')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
   
           case 11:
             await ctx.replyWithPhoto('AgACAgIAAxkBAAIBdWXT1XL2yydrO320XE_81IDDsNeEAAIU1jEbQRahSvZ9s4tqRsEgAQADAgADeQADNAQ')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
             
           case 15:
             await ctx.replyWithVoice('AwACAgIAAxkBAAIBImXTvZ0H3QQxtPDt-5lSwG1jgumXAAIvQgAClmJQSivzax2NFv0KNAQ')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
   
           case 22:
             await ctx.replyWithVoice('AwACAgIAAxkBAAITMWXYsqxLGZAmSCGNAW5fNTTx4e-IAALDPwACS5a5SqNc8ixJ0zcpNAQ')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
   
           case 23:
             await ctx.replyWithPhoto('AgACAgIAAxkBAAITNGXYsv2ObCa2D1fPAhhXezLZpRL9AALq3jEb1miwSu-O8l7tBMNqAQADAgADeQADNAQ')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
   
           case 24:
@@ -85,24 +88,24 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) 
             switch (actionNumber) {
               case 1:
                 await ctx.replyWithPhoto('AgACAgIAAxkBAAITN2XYsyziDaFNTiO1djWbEWN4F-TJAALr3jEb1miwSqjhafgRl4yzAQADAgADeQADNAQ')
-                ctx.reply(...msg)
+                await ctx.reply(...msg)
                 break;
                 
               case 2:
                 await ctx.replyWithPhoto('AgACAgIAAxkBAAITOmXYsz8P_rD6OThFwvhs7igX9VxPAALs3jEb1miwSoc8wDOl0j4XAQADAgADeQADNAQ')
-                ctx.reply(...msg)
+                await ctx.reply(...msg)
                 break;
                 
               case 3:
                 await ctx.replyWithPhoto('AgACAgIAAxkBAAITPWXYs2jjAAGPcKfkQoDY5uIohkcOjgAC7d4xG9ZosEpjnYT_A9TGfwEAAwIAA3kAAzQE')
-                ctx.reply(...msg)
+                await ctx.reply(...msg)
                 break;
             }
             break;
   
           case 25:
             await ctx.replyWithPhoto('AgACAgIAAxkBAAITQ2XYs8D_AAFQ6xGYfFM-Wq0J4lwQsAACT9wxG7F7wUpp0thLlhYKvgEAAwIAA3kAAzQE')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
   
           case 26:
@@ -110,39 +113,39 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) 
             switch (actionNumber) {
               case 1:
                 await ctx.replyWithPhoto('AgACAgIAAxkBAAITRmXYs9INxaV70kWQqzvQRyySk-VCAAJT3DEbsXvBSpMCVnUCl2xwAQADAgADeQADNAQ')
-                ctx.reply(...msg)
+                await ctx.reply(...msg)
                 break;
                 
               case 2:
                 await ctx.replyWithPhoto('AgACAgIAAxkBAAITSWXYs-PjNhZ0AalefAJJhv2GvVuAAAJU3DEbsXvBSiVc0elERnhsAQADAgADeQADNAQ')
-                ctx.reply(...msg)
+                await ctx.reply(...msg)
                 break;
                 
               case 3:
                 await ctx.replyWithPhoto('AgACAgIAAxkBAAITTGXYs_Xy_entCWC54GoeFFNKjpAuAAJV3DEbsXvBSoTFpRCIfwr0AQADAgADeQADNAQ')
-                ctx.reply(...msg)
+                await ctx.reply(...msg)
                 break;
             }
             break;
   
           case 29:
             await ctx.replyWithVoice('AwACAgIAAxkBAAITQGXYs6CczhYVITSd5zXGuF6EA8NzAAIvRQAC9fKgSrmqSdbWt2pzNAQ')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
   
           case 37:
             await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIU7mXZEW2dzUzSwYN1J9kHDwAB_tYzjQACvUAAAsrz0UrX4ckV4YOfHTQE' : 'AwACAgIAAxkBAAIBbWXbfYVy4QrWfUPAmzAGdQdjNF67AAK9QAACyvPRSpo0R5WAvUgcNAQ')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
   
           case 39:
             await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIU8WXZFRXR8APHkCvHkLjUP6ncOoBUAALcQAACyvPRSoLnKJZ_Bf8oNAQ' : 'AwACAgIAAxkBAAIBdWXbfhV8btH9kgpzpYN6x2fbxsxQAALcQAACyvPRStfWi6HOjzwsNAQ')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
   
           case 45:
             await ctx.replyWithPhoto(IS_PROD ? 'AgACAgIAAxkBAAIVGWXZJeZAJPxWsLPupxnfNAw4-UbaAAJY1TEbyvPRSst99UEheIx6AQADAgADeQADNAQ' : 'AgACAgIAAxkBAAIBhGXbfu0sCu2OujXeOZns1k5x6QF5AAJY1TEbyvPRSl7OzLMWqC7uAQADAgADeQADNAQ')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
   
           case 46:
@@ -150,39 +153,49 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) 
             switch (actionNumber) {
               case 1:
                 await ctx.replyWithPhoto(IS_PROD ? 'AgACAgIAAxkBAAIVHGXZJgKrgLWSjzN-8dPHxuSlSFPkAAJZ1TEbyvPRSpdvKz-mkepFAQADAgADeQADNAQ' : 'AgACAgIAAxkBAAIBh2XbfwKnHHJPoL4bxTEVL64NCSODAAJZ1TEbyvPRSosfKBnDfVJ7AQADAgADeQADNAQ')
-                ctx.reply(...msg)
+                await ctx.reply(...msg)
                 break;
                 
               case 2:
                 await ctx.replyWithPhoto(IS_PROD ? 'AgACAgIAAxkBAAIVH2XZJhT89ewCPqw0EkpnCE7s4RfUAAJa1TEbyvPRSrb9LAE8l5p_AQADAgADeQADNAQ' : 'AgACAgIAAxkBAAIBimXbfxa0D5Ng9PCgn4WpKUf8x07vAAJa1TEbyvPRSvh6KvTrDAWRAQADAgADeQADNAQ')
-                ctx.reply(...msg)
+                await ctx.reply(...msg)
                 break;
                 
               case 3:
                 await ctx.replyWithPhoto(IS_PROD ? 'AgACAgIAAxkBAAIVImXZJiQgq0i2lrfofcVBK0V7Q4YYAAJb1TEbyvPRSkJTdnJ_XJb6AQADAgADeQADNAQ' : 'AgACAgIAAxkBAAIBjWXbfyl33WW3idWunApyS3IpdWjqAAJb1TEbyvPRSh-eiOEKKbFZAQADAgADeQADNAQ')
-                ctx.reply(...msg)
+                await ctx.reply(...msg)
                 break;
             }
             break;
   
           case 50:
             await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIVC2XZH9q_kQQIF-Bm1ayXOJQBf6j9AALuQAACyvPRShiUVER6EPxoNAQ' : 'AwACAgIAAxkBAAIBe2Xbfn-Ji9lstiwV0_A0cYtQPQndAALuQAACyvPRSpf3gQxnkm6bNAQ')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
   
           case 53:
             await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIVCGXZH6neMtwV8WOtZN0YOsbL_OlSAALtQAACyvPRSoW_0qzJhbpVNAQ' : 'AwACAgIAAxkBAAIBeGXbfmN3OXUR-zt_mDTke0u7OT1xAALtQAACyvPRSgR6_oRQuEqiNAQ')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
   
           case 60:
             await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIVDmXZIAVgd0aEWkTSkyfdb7UP3uKrAAL6QAACyvPRSg37-kjY3tOlNAQ' : 'AwACAgIAAxkBAAIBfmXbfqMtnTMIoMB7mJJjGYpVBQaMAAL6QAACyvPRSu07Rxy2afR_NAQ')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
             break;
   
           case 63:
             await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIVFmXZI-VFpETEwhw6nmvWtxu11VqJAAIHQQACyvPRSjyIEeHCFGIHNAQ' : 'AwACAgIAAxkBAAIBgWXbftSc1sM0JHXiRyx71y1dlr6yAAIHQQACyvPRSgABjPqAiauPWjQE')
-            ctx.reply(...msg)
+            await ctx.reply(...msg)
+            break;
+  
+          case 70:
+            await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIjfWXfriqyR3iHPZ1mxALzyGzZhSe1AAIKMgACAtOQSWVNmhT-hkSJNAQ' : 'AwACAgIAAxkBAAICCGXfsOngtYW8VXKaL4QCWfdqpBXxAAIKMgACAtOQSZbJn9gCKg4GNAQ')
+            await ctx.reply(...msg)
+            break;
+  
+          case 73:
+            await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIjeWXfrZtuN1s9qlTn60osf2-9WNNNAALbQgACd9cAAUuUUe4FtBYgszQE' : 'AwACAgIAAxkBAAICBWXfsMaG3T9DFpj0UP2IPVLoYNInAALbQgACd9cAAUu2ZOM6OZXC5zQE')
+            await ctx.reply(...msg)
             break;
   
           // case 5:
@@ -205,7 +218,7 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber) 
         
           default:
             // ctx.reply(...msg, { parse_mode: 'markdown' })
-            sendMessage(msg, { parse_mode: 'markdown' })
+            await sendMessage(msg, { parse_mode: 'markdown' })
             break;
         }
       } catch (e) {
@@ -244,7 +257,7 @@ const onMsgReceive = async (ctx, userId, isMsgAnswer = false, isMailing = false,
   const user = getUser(ctx)
 
   const userdb = await usersModel.findOne({ tgId: userId || user.id })
-  const { _id: isUserExists, latestFunnelMsg = 0 } = userdb || {}
+  const { _id: isUserExists, latestFunnelMsg = 0, paidModule = 0 } = userdb || {}
         
   if (!isUserExists && user) {
     const referalTgId = ctx.startPayload
@@ -270,7 +283,7 @@ const onMsgReceive = async (ctx, userId, isMsgAnswer = false, isMailing = false,
   // Если пользователь прислал сообщение, а не нажал на кнопку и на сообщение не ожидается ответ пользователя - не продолжаем воронку
   if (isMsgAnswer && !WAIT_ANSWER_MSG_IDS.includes(latestFunnelMsg)) return latestFunnelMsg
 
-  funnelReply(ctx, userId, latestFunnelMsg, isMailing, actionNumber)
+  funnelReply(ctx, userId, latestFunnelMsg, isMailing, actionNumber, paidModule)
 }
 
 bot.start(async (ctx) => onMsgReceive(ctx))
@@ -367,8 +380,8 @@ ${JSON.stringify(e, null, 2)}`)
 });
 
 const job = CronJob.from({
-	cronTime: '0 */1 * * *',  // каждый час
-	// cronTime: '*/1 * * * *',  // каждую минуту
+	// cronTime: '0 */1 * * *',  // каждый час
+	cronTime: '*/1 * * * *',  // каждую минуту
 	onTick: async function () {
     // достаем всех пользователей, у которых следующее сообщение из воронки - 9
     const usersdb = await usersModel.find({ latestFunnelMsg: { $in: NEW_DAY_MSG_IDS } })

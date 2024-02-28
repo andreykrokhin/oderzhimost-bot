@@ -8,6 +8,7 @@ const UsersSchema = new Schema({
   signUpDate: { type: Date },
   // totems: { type: Number },
   // keys: { type: Number },
+  paidModule: { type: Number },
   saleStartDate: { type: Date },
   latestFunnelMsg: { type: Number },
   latestFunnelDate: { type: Date },   // Дата отправки последнего сообщения по воронке
