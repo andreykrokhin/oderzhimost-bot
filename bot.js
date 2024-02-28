@@ -380,8 +380,8 @@ ${JSON.stringify(e, null, 2)}`)
 });
 
 const job = CronJob.from({
-	// cronTime: '0 */1 * * *',  // каждый час
-	cronTime: '*/1 * * * *',  // каждую минуту
+	cronTime: '0 */1 * * *',  // каждый час
+	// cronTime: '*/1 * * * *',  // каждую минуту
 	onTick: async function () {
     // достаем всех пользователей, у которых следующее сообщение из воронки - 9
     const usersdb = await usersModel.find({ latestFunnelMsg: { $in: NEW_DAY_MSG_IDS } })
