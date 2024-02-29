@@ -309,7 +309,7 @@ bot.command('stat', async (ctx) => {
   if (!ADMIN_IDS.includes(user.id?.toString())) return
 
   const usersdb = await usersModel.find()
-  const filteredUsers = usersdb?.filter(userdb => ADMIN_IDS.includes(userdb.tgId?.toString()))
+  const filteredUsers = usersdb?.filter(userdb => !ADMIN_IDS.includes(userdb.tgId?.toString()))
   const usersByDay = NEW_DAY_MSG_IDS.map(value => filteredUsers?.filter(user => user.latestFunnelMsg >= value))
   
   let msgStat = `Пользователей всего — ${filteredUsers?.length || 0}\n`
@@ -331,7 +331,7 @@ bot.command('statm', async (ctx) => {
   if (!ADMIN_IDS.includes(user.id?.toString())) return
 
   const usersdb = await usersModel.find()
-  const filteredUsers = usersdb?.filter(userdb => ADMIN_IDS.includes(userdb.tgId?.toString()))
+  const filteredUsers = usersdb?.filter(userdb => !ADMIN_IDS.includes(userdb.tgId?.toString()))
   const usersByMsg = FUNNEL_MSG.map((_v, key) => filteredUsers?.filter(user => user.latestFunnelMsg === key))
   
   let msgStat = ``
