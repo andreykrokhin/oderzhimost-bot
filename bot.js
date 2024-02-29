@@ -198,6 +198,16 @@ const funnelReply = async (ctx, userId, msgId, isMailing = false, actionNumber, 
             await ctx.reply(...msg)
             break;
   
+          case 80:
+            await ctx.replyWithDocument(IS_PROD ? 'BQACAgIAAxkBAAIkN2XhBrbhrulIDKwYNNTXtn0_WTrGAALrQQAC-r8JS1kwSR4SR-7nNAQ' : 'BQACAgIAAxkBAAICJ2XhBqGNIFRlmG7ohyNnFJNVJZo9AALrQQAC-r8JS6GmFTcvyb0JNAQ')
+            await ctx.reply(...msg)
+            break;
+  
+          case 83:
+            await ctx.replyWithVoice(IS_PROD ? 'AwACAgIAAxkBAAIkNGXhAWoTQemyzBKjThT1rOp86qfuAALbQQAC-r8JSxbJTpytAu9NNAQ' : 'AwACAgIAAxkBAAICJGXhAXbCKcLRtJ9Nmw6hI2roAAFKfwAC20EAAvq_CUtNrJiKS2YVwzQE')
+            await ctx.reply(...msg)
+            break;
+  
           // case 5:
           //   ctx.editMessageText(...msg)
             
@@ -299,13 +309,13 @@ bot.command('stat', async (ctx) => {
   if (!ADMIN_IDS.includes(user.id?.toString())) return
 
   const usersdb = await usersModel.find()
-
-  const usersByDay = NEW_DAY_MSG_IDS.map(value => usersdb?.filter(user => user.latestFunnelMsg >= value))
+  const filteredUsers = usersdb?.filter(userdb => ADMIN_IDS.includes(userdb.tgId))
+  const usersByDay = NEW_DAY_MSG_IDS.map(value => filteredUsers?.filter(user => user.latestFunnelMsg >= value))
   
-  let msgStat = `Пользователей всего — ${usersdb?.length || 0}\n`
+  let msgStat = `Пользователей всего — ${filteredUsers?.length || 0}\n`
 
   usersByDay.forEach((users, i) => {
-    const prevUsers = i === 0 ? usersdb?.length : usersByDay[i - 1]?.length
+    const prevUsers = i === 0 ? filteredUsers?.length : usersByDay[i - 1]?.length
     const currentUsers = users?.length || 0
     const percent = (((currentUsers * 100) / prevUsers) || 0).toFixed(0)
 
@@ -321,14 +331,14 @@ bot.command('statm', async (ctx) => {
   if (!ADMIN_IDS.includes(user.id?.toString())) return
 
   const usersdb = await usersModel.find()
-
-  const usersByMsg = FUNNEL_MSG.map((_v, key) => usersdb?.filter(user => user.latestFunnelMsg === key))
+  const filteredUsers = usersdb?.filter(userdb => ADMIN_IDS.includes(userdb.tgId))
+  const usersByMsg = FUNNEL_MSG.map((_v, key) => filteredUsers?.filter(user => user.latestFunnelMsg === key))
   
   let msgStat = ``
 
   usersByMsg.forEach((users, i) => {
     const currentUsers = users?.length || 0
-    const percent = (((currentUsers * 100) / usersdb?.length) || 0).toFixed(0)
+    const percent = (((currentUsers * 100) / filteredUsers?.length) || 0).toFixed(0)
 
     msgStat += `#${i} — ${currentUsers} чел. (${percent}%)\n`
   })
@@ -380,7 +390,7 @@ ${JSON.stringify(e, null, 2)}`)
 });
 
 const job = CronJob.from({
-	cronTime: '0 */1 * * *',  // каждый час
+	cronTime: IS_PROD ? '0 */1 * * *' : '*/1 * * * *',  // каждый час
 	// cronTime: '*/1 * * * *',  // каждую минуту
 	onTick: async function () {
     // достаем всех пользователей, у которых следующее сообщение из воронки - 9
