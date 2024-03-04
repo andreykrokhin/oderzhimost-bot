@@ -1,10 +1,10 @@
 const { Markup } = require("telegraf")
 
 // ID сообщений начала нового дня
-const NEW_DAY_MSG_IDS = [9, 19, 33, 43, 54, 67, 76, 86, 97]
+const NEW_DAY_MSG_IDS = [9, 19, 33, 43, 54, 67, 76, 86, 97, 107]
 
 // ID следующих сообщений, перед которыми было сообщение, на которые явно ждем ответ от пользователя (на остальные сообщения бот не будет продвигать по воронке)
-const WAIT_ANSWER_MSG_IDS = [6, 21, 34, 44, 55, 56, 65, 78, 80, 87]
+const WAIT_ANSWER_MSG_IDS = [6, 21, 34, 44, 55, 56, 65, 78, 80, 87, 98]
 
 const FUNNEL_MSG = [
   // ДЕНЬ 0
@@ -802,7 +802,7 @@ const PAID_MSG = [
 
 Теперь тебя ждет новая привычка:
 
-✔️Планирование
+✔️ Планирование
 
 Пропиши планы на завтра, с обязательными прописанными делами для себя.`,
         Markup.inlineKeyboard([Markup.button.callback('Готово ✔️', 'next_msg')], { columns: 1 })
@@ -1006,6 +1006,89 @@ const PAID_MSG = [
       ],
     ],
     // 96
+    [
+      [
+`Встречаемся завтра здесь 😜
+
+Обязательно выполни все задания до завтра 🖤`,
+      ],
+    ],
+
+    // DAY 9
+    // 97 (ждем фото)
+    [
+      [
+`Одержимость Собой
+
+День 9
+
+Отправь отчет с выполненным заданием в ответном сообщении (фото, скрин)`,
+      ]
+    ],
+    // 98
+    [
+      [
+        `Ты отлично справляешься, твоя инициатива и ответственность заслуживают похвалы 🖤`,
+        Markup.inlineKeyboard([Markup.button.callback('Благодарю 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 99
+    [
+      [
+        `Сегодня мы поговорим про самооценку, сегодня тебе предстоит прочитать весь файл и выполнить задание ✨`,
+        Markup.inlineKeyboard([Markup.button.callback('Готово 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 100
+    [
+      [
+`Посмотри на картинку с вопросами и ответь на них в своем ежедневнике
+
+Ты можешь отвечать на вопросы, основываясь на примерах ответов`,
+        Markup.inlineKeyboard([Markup.button.callback('Посмотреть примеры ответов', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 101
+    [
+      [
+        `Примеры ответов`,
+        Markup.inlineKeyboard([Markup.button.callback('Готово ✔️', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 102
+    [
+      [
+        `Подготовь наушники для прослушивания аудио`,
+        Markup.inlineKeyboard([Markup.button.callback('Продолжить', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 103 (audio)
+    [
+      [
+        `Трансерфинг ЗА 78 ДНЕЙ ЗЕЛАНД “Освобождение”`,
+        Markup.inlineKeyboard([Markup.button.callback('Готово!', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 104
+    [
+      [
+        `Запиши свои мысли в свой ежедневник на счет прослушанного. Какие мысли, чувства принесло это аудио? Как ты можешь это применить`,
+        Markup.inlineKeyboard([Markup.button.callback('Записываю 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 105
+    [
+      [
+`Привычки
+
+1. Планируем завтрашний день
+2. Не принимать алкоголь на время всего марафона
+🖤Новая привычка
+3. Чтение 2 страницы в день`,
+        Markup.inlineKeyboard([Markup.button.callback('Готово ✔️', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 106
     [
       [
 `Встречаемся завтра здесь 😜
@@ -1274,6 +1357,18 @@ const MEDIA_MSG = {
 
   93: (ctx, actionNumber, isProd) =>
     ctx.replyWithVoice(isProd ? 'AwACAgIAAxkBAAIlEWXk-wABcMlomSsStsJFXPgy6MXONgACwD8AAoagKEvsjqi7YcnVVzQE' : 'AwACAgIAAxkBAAICvWXk-s-tiSIx_b0-r1OFu9LpYMYfAALAPwAChqAoS0Ze-JIa5xmuNAQ'),
+
+  99: (ctx, actionNumber, isProd) =>
+    ctx.replyWithDocument(isProd ? 'BQACAgIAAxkBAAIlcGXmPnJOTlcgK2Qf2y_YRQf_TFp7AAJjQwACa2kxS_o0BqqlMqVvNAQ' : 'BQACAgIAAxkBAAIC92XmPolmRT3o1C0cW3uSGnL06rbOAAJjQwACa2kxSxwyTIw0ls6bNAQ'),
+
+  100: (ctx, actionNumber, isProd) =>
+    ctx.replyWithDocument(isProd ? 'BQACAgIAAxkBAAIlc2XmP7q1O84ypneteHxTzSYIKGFRAAItSgAC-xIwSxFiSRxDXIeuNAQ' : 'BQACAgIAAxkBAAIC-mXmP8zVyd7k1GgXe3xfmM05hmd-AAJ7PgACrMM4S9CtdcyK2WD8NAQ'),
+
+  101: (ctx, actionNumber, isProd) =>
+    ctx.replyWithDocument(isProd ? 'BQACAgIAAxkBAAIldmXmQGzYVTkJeyj2PvsM11cvK83wAAI1SgAC-xIwSy8F48f3BVZ-NAQ' : 'BQACAgIAAxkBAAIC_WXmQFiUsue6SbcytBKfWHqg7JBiAAJ9PgACrMM4S8sD_icE2qNINAQ'),
+
+  103: (ctx, actionNumber, isProd) =>
+    ctx.replyWithVoice(isProd ? 'AwACAgIAAxkBAAIleWXmQL22aHDmwsA0m1Y5ZSd_tXpeAANFAALUjjFLxERU_fgDSkU0BA' : 'AwACAgIAAxkBAAIDAAFl5kDNx4Za975u_ET3M242588whwADRQAC1I4xS42bcununHfxNAQ'),
 }
 
 module.exports = {

@@ -247,12 +247,12 @@ const job = CronJob.from({
       const currentDate = new Date()   // текущая дата
       const currentHour = currentDate.getHours()  // текущий час
 
-      console.log('check 1', currentDate.getDate(), latestFunnelDate.getDate(), latestFunnelHour)
+      if (!IS_PROD) console.log('check 1', user?.tgId, currentDate.getDate(), latestFunnelDate.getDate(), latestFunnelHour)
 
       // если число месяца последнего сообщения совпадает с текущим - пропускаем пользователя
       if (currentDate.getDate() === latestFunnelDate.getDate() && latestFunnelHour > 5) return
 
-      console.log('check 2', currentHour, user.startDayHour)
+      if (!IS_PROD) console.log('check 2', user?.tgId, currentHour, user.startDayHour)
 
       // если текущий час меньше, чем час, с которого можно отправлять сообщения - пропускаем пользователя
       if (currentHour < user.startDayHour) return
