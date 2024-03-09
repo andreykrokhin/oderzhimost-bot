@@ -111,35 +111,39 @@ const onMsgReceive = async (ctx, userId, isMsgAnswer = false, isMailing = false,
   const user = getUser(ctx)
 
   const userdb = await usersModel.findOne({ tgId: userId || user.id })
-  const { _id: isUserExists, latestFunnelMsg = 0, paidModule = 0 } = userdb || {}
+  const { _id: isUserExists, latestFunnelMsg = 0, paidModule = 0, isActive = false } = userdb || {}
+  let isActiveUser = isActive || paidModule > 0
         
   if (!isUserExists && user) {
     const referalTgId = ctx.startPayload
+    isActiveUser = !!referalTgId && ADMIN_IDS.includes(referalTgId?.toString())
 
     await usersModel.create({
       tgId: user.id,
       name: user.first_name || user.username,
       referalTgId,
       signUpDate: new Date(),
-      // totems: 0,
-      // keys: 0,
       latestFunnelMessage: 0,
       latestFunnelDate: new Date(),
-      // startDayTime: '10:00',
       startDayHour: 10,
+      paidModule: 0,
+      isActive: isActiveUser,
     })
 
     const username = user.username ? `@${user.username} (${user.first_name})` : user.first_name
 
-    bot.telegram.sendMessage(process.env.ADMIN_CHAT, `Новый пользователь - ${username}`)
+    if (IS_PROD) bot.telegram.sendMessage(process.env.ADMIN_CHAT, `Новый пользователь - ${username}`)
   }
 
   // Если пользователь прислал сообщение, а не нажал на кнопку и на сообщение не ожидается ответ пользователя - не продолжаем воронку
   if (isMsgAnswer && !WAIT_ANSWER_MSG_IDS.includes(latestFunnelMsg)) return latestFunnelMsg
 
-  funnelReply(ctx, userId, latestFunnelMsg, isMailing, actionNumber, paidModule)
+  if (isActiveUser) funnelReply(ctx, userId, latestFunnelMsg, isMailing, actionNumber, paidModule)
+  else if (ctx && !isMailing) ctx.reply(BOT_MSG.user_not_active, { parse_mode: 'markdown' })
 }
 
+// https://t.me/oderzhimostbot?start=719520232
+// https://t.me/mopsscalperbot?start=719520232
 bot.start(async (ctx) => onMsgReceive(ctx))
 
 bot.action('next_msg_1', async (ctx) => onMsgReceive(ctx, undefined, undefined, undefined, 1))

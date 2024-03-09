@@ -8,12 +8,12 @@ const UsersSchema = new Schema({
   signUpDate: { type: Date },
   // totems: { type: Number },
   // keys: { type: Number },
-  paidModule: { type: Number },
   saleStartDate: { type: Date },
   latestFunnelMsg: { type: Number },
   latestFunnelDate: { type: Date },   // Дата отправки последнего сообщения по воронке
   startDayHour: { type: Number },   // Время начала следующего дня, когда можно рассылать сообщения
-  payedStages: { type: Number },    // Оплаченные ступени
+  paidModule: { type: Number },    // Оплаченные ступени
+  isActive: { type: Boolean },    // Оплативший пользователь, которому можно отправлять сообщения
 })
 
 module.exports = model('Users', UsersSchema)
