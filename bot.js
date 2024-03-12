@@ -161,6 +161,7 @@ bot.command('stat', async (ctx) => {
   const usersByDay = NEW_DAY_MSG_IDS.map(value => filteredUsers?.filter(user => user.latestFunnelMsg >= value))
   
   let msgStat = `Пользователей всего — ${filteredUsers?.length || 0}\n`
+  msgStat += `Платных — ${filteredUsers?.filter(({ isActive }) => isActive)?.length || 0}\n\n`
 
   usersByDay.forEach((users, i) => {
     const prevUsers = i === 0 ? filteredUsers?.length : usersByDay[i - 1]?.length
