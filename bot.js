@@ -136,7 +136,10 @@ const onMsgReceive = async (ctx, userId, isMsgAnswer = false, isMailing = false,
   }
 
   // Если пользователь прислал сообщение, а не нажал на кнопку и на сообщение не ожидается ответ пользователя - не продолжаем воронку
-  if (isMsgAnswer && !WAIT_ANSWER_MSG_IDS.includes(latestFunnelMsg)) return latestFunnelMsg
+  if (
+    (isMsgAnswer && !WAIT_ANSWER_MSG_IDS.includes(latestFunnelMsg)) ||
+    (!isMsgAnswer && WAIT_ANSWER_MSG_IDS.includes(latestFunnelMsg))
+  ) return latestFunnelMsg
 
   if (isActiveUser) funnelReply(ctx, userId, latestFunnelMsg, isMailing, actionNumber, paidModule)
   else if (ctx && !isMailing) ctx.reply(BOT_MSG.user_not_active, { parse_mode: 'markdown' })
