@@ -1,10 +1,10 @@
 const { Markup } = require("telegraf")
 
 // ID сообщений начала нового дня
-const NEW_DAY_MSG_IDS = [9, 19, 33, 43, 54, 67, 76, 86, 97, 107, 115, 126, 138, 150, 160, 168, 178, 192, 202, 212, 220, 231]
+const NEW_DAY_MSG_IDS = [9, 19, 33, 43, 54, 67, 76, 86, 97, 107, 115, 126, 138, 150, 160, 168, 178, 192, 202, 212, 220, 231, 240]
 
 // ID следующих сообщений, перед которыми было сообщение, на которые явно ждем ответ от пользователя (на остальные сообщения бот не будет продвигать по воронке)
-const WAIT_ANSWER_MSG_IDS = [6, 21, 34, 44, 55, 56, 65, 78, 80, 87, 98, 108, 116, 127, 139, 141, 151, 161, 169, 179, 188, 194, 203, 213, 221]
+const WAIT_ANSWER_MSG_IDS = [6, 21, 34, 44, 55, 56, 65, 78, 80, 87, 98, 108, 116, 127, 139, 141, 151, 161, 169, 179, 188, 194, 203, 213, 221, 232]
 
 const FUNNEL_MSG = [
   // ДЕНЬ 0
@@ -752,7 +752,7 @@ https://youtu.be/kq17PXXEygI?si=eAJFu-AD04oQ_5lk
 ]
 
 const PAID_MSG = [
-  // MODLUE 0
+  // MODLUE 1
   [
     // DAY 6
     // 67
@@ -1836,6 +1836,10 @@ https://youtu.be/td6FCUMp39s?si=dXmgPh-rzBQ98KfR`,
 Если у тебя возникнут любые вопросы по продолжению, ты всегда можешь задать их здесь или @sevenmara лично`,
       ],
     ],
+  ],
+
+  // MODULE 2
+  [
 
     // DAY 18
     // 192
@@ -2174,6 +2178,83 @@ https://plus.yandex.ru/gift?promoName=referral&promocode=4AHQX4XNQZ`,
       ],
     ],
     // 230
+    [
+      [
+`Встречаемся завтра здесь 😜
+
+Обязательно выполни все задания до завтра 🖤`,
+      ],
+    ],
+
+    // DAY 22
+    // 231 (ждем фото)
+    [
+      [
+`Одержимость Собой
+
+День 22
+
+Отправь отчет с выполненным заданием в ответном сообщении (фото, скрин)`,
+      ]
+    ],
+    // 232
+    [
+      [
+        `Твоя решительность вдохновляет 🖤`,
+        Markup.inlineKeyboard([Markup.button.callback('Благодарю 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 233 (audio)
+    [
+      [
+        `Прослушай вновь скрипт "Любовь к себе"`,
+        Markup.inlineKeyboard([Markup.button.callback('Готово 🖤', 'next_msg')], { columns: 1 })
+      ]
+    ],
+    // 234 (photo)
+    [
+      [
+        `Сегодня тебе нужно окунуться в планирование своих целей, мы подготовили для тебя три примера, для лучшего понимания структуры 🖤`,
+        Markup.inlineKeyboard([Markup.button.callback('Звучит Вдохновляюще 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 235
+    [
+      [
+`Запиши свои мысли в свой ежедневник:
+
+что ты чувствуешь после проделанной работы?`,
+        Markup.inlineKeyboard([Markup.button.callback('Записываю 🖤', 'next_msg')], { columns: 1 })
+      ]
+    ],
+    // 236 (audio)
+    [
+      [
+        `Трансерфинг ЗА 78 ДНЕЙ ЗЕЛАНД “Погоня за отражением”`,
+        Markup.inlineKeyboard([Markup.button.callback('Готово!', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 237
+    [
+      [
+        `Запиши свои мысли в свой ежедневник на счет прослушанного. Какие мысли, чувства принесло это аудио? Как ты можешь это применить`,
+        Markup.inlineKeyboard([Markup.button.callback('Записываю 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 238
+    [
+      [
+`Привычки
+1. Планируем завтрашний день
+2. Не принимать алкоголь на время всего марафона
+3. Чтение 5 страниц в день
+4. Пробуждение
+5. Принимать душ дважды в день
+6. 10 Волшебных целей`,
+        Markup.inlineKeyboard([Markup.button.callback('Готово!', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 239
     [
       [
 `Встречаемся завтра здесь 😜
@@ -2581,6 +2662,17 @@ const MEDIA_MSG = {
 
   227: (ctx, actionNumber, isProd) =>
     ctx.replyWithVoice(isProd ? 'AwACAgIAAxkBAAIzBWX7YqBD0LGgGClmigY0MYNTH5bCAAKzQwACrzXAS-QlXbT9eRwuNAQ' : 'AwACAgIAAxkBAAIFOWX7Ypgy1EWA4NekVQRPHbuuV5x2AAKzQwACrzXAS6tjAAFTGI0edDQE'),
+
+  233: (ctx, actionNumber, isProd) =>
+    ctx.replyWithVoice(isProd ? 'CQACAgIAAxkBAAIqP2XvfS0OYLZ8RTP5Ag3sGRlU_Nn3AAJ5SQACKpx5S-gDlB_Ua2bXNAQ' : 'CQACAgIAAxkBAAID32XvfWFp8g9RfB9Oz90J8NILtkt-AAJ5SQACKpx5Sw2iPD4aJJt5NAQ'),
+
+  234: (ctx, actionNumber, isProd) => {
+    ctx.replyWithDocument(isProd ? 'BQACAgIAAxkBAAIzY2X8rx6wYg5KjO2xHBtRnDe4PqAiAAIlRwACICHAS8cwI-c4aS-_NAQ' : 'BQACAgIAAxkBAAIFTWX8rwn-HB34vqvyxhRvWmoN4y6SAAIlRwACICHAS4-cAzMeT_pDNAQ')
+    return ctx.replyWithDocument(isProd ? 'BQACAgIAAxkBAAIzZmX8rybZKvAiqWEkz6y7r1zi-kuFAAIkRwACICHAS539QILohjCHNAQ' : 'BQACAgIAAxkBAAIFUGX8rxSre6wKaMnowWwmHTWlA7HOAAIkRwACICHAS-1-_bQvkI9jNAQ')
+  },
+
+  236: (ctx, actionNumber, isProd) =>
+    ctx.replyWithVoice(isProd ? 'AwACAgIAAxkBAAIzaWX8sFnhA3Np7fZMvWrZQsvuptqpAALAQAACN5jpSzncwEc0PtEAATQE' : 'AwACAgIAAxkBAAIFV2X8sFDQCEt5CdRWB3_quiMQkIYLAALAQAACN5jpS0EbwKC0t-HHNAQ'),
 }
 
 module.exports = {
