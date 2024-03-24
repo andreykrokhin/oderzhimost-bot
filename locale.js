@@ -1,10 +1,10 @@
 const { Markup } = require("telegraf")
 
 // ID сообщений начала нового дня
-const NEW_DAY_MSG_IDS = [9, 19, 33, 43, 54, 67, 76, 86, 97, 107, 115, 126, 138, 150, 160, 168, 178, 192, 202, 212, 220, 231, 240]
+const NEW_DAY_MSG_IDS = [9, 19, 33, 43, 54, 67, 76, 86, 97, 107, 115, 126, 138, 150, 160, 168, 178, 192, 202, 212, 220, 231, 240, 248]
 
 // ID следующих сообщений, перед которыми было сообщение, на которые явно ждем ответ от пользователя (на остальные сообщения бот не будет продвигать по воронке)
-const WAIT_ANSWER_MSG_IDS = [6, 21, 34, 44, 55, 56, 65, 78, 80, 87, 98, 108, 116, 127, 139, 141, 151, 161, 169, 179, 188, 194, 203, 213, 221, 232]
+const WAIT_ANSWER_MSG_IDS = [6, 21, 34, 44, 55, 56, 65, 78, 80, 87, 98, 108, 116, 127, 139, 141, 151, 161, 169, 179, 188, 194, 203, 213, 221, 232, 241]
 
 const FUNNEL_MSG = [
   // ДЕНЬ 0
@@ -1840,7 +1840,6 @@ https://youtu.be/td6FCUMp39s?si=dXmgPh-rzBQ98KfR`,
 
   // MODULE 2
   [
-
     // DAY 18
     // 192
     [
@@ -2262,6 +2261,74 @@ https://plus.yandex.ru/gift?promoName=referral&promocode=4AHQX4XNQZ`,
 Обязательно выполни все задания до завтра 🖤`,
       ],
     ],
+
+    // DAY 23
+    // 240 (ждем фото)
+    [
+      [
+`Одержимость Собой
+
+День 23
+
+Отправь отчет с выполненным заданием в ответном сообщении (фото, скрин)`,
+      ]
+    ],
+    // 241
+    [
+      [
+        `Твоя мудрость и способность находить решения в сложных ситуациях вдохновляют меня 🖤`,
+        Markup.inlineKeyboard([Markup.button.callback('Благодарю 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 242 (audio)
+    [
+      [
+        `Прослушай вновь скрипт "Любовь к себе"`,
+        Markup.inlineKeyboard([Markup.button.callback('Готово 🖤', 'next_msg')], { columns: 1 })
+      ]
+    ],
+    // 243 (photo)
+    [
+      [
+        `Напиши свои определения на факты "Кто есть Я"`,
+        Markup.inlineKeyboard([Markup.button.callback('Записываю 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 244 (audio)
+    [
+      [
+        `Трансерфинг ЗА 78 ДНЕЙ ЗЕЛАНД “Мир, Дай мне себя”`,
+        Markup.inlineKeyboard([Markup.button.callback('Готово!', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 245
+    [
+      [
+        `Запиши свои мысли в свой ежедневник на счет прослушанного. Какие мысли, чувства принесло это аудио? Как ты можешь это применить`,
+        Markup.inlineKeyboard([Markup.button.callback('Записываю 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 246
+    [
+      [
+`Привычки
+1. Планируем завтрашний день
+2. Не принимать алкоголь на время всего марафона
+3. Чтение 5 страниц в день
+4. Пробуждение
+5. Принимать душ дважды в день
+6. 10 Волшебных целей`,
+        Markup.inlineKeyboard([Markup.button.callback('Готово!', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 247
+    [
+      [
+`Встречаемся завтра здесь 😜
+
+Обязательно выполни все задания до завтра 🖤`,
+      ],
+    ],
   ]
 ]
 
@@ -2673,6 +2740,15 @@ const MEDIA_MSG = {
 
   236: (ctx, actionNumber, isProd) =>
     ctx.replyWithVoice(isProd ? 'AwACAgIAAxkBAAIzaWX8sFnhA3Np7fZMvWrZQsvuptqpAALAQAACN5jpSzncwEc0PtEAATQE' : 'AwACAgIAAxkBAAIFV2X8sFDQCEt5CdRWB3_quiMQkIYLAALAQAACN5jpS0EbwKC0t-HHNAQ'),
+
+  242: (ctx, actionNumber, isProd) =>
+    ctx.replyWithVoice(isProd ? 'CQACAgIAAxkBAAIqP2XvfS0OYLZ8RTP5Ag3sGRlU_Nn3AAJ5SQACKpx5S-gDlB_Ua2bXNAQ' : 'CQACAgIAAxkBAAID32XvfWFp8g9RfB9Oz90J8NILtkt-AAJ5SQACKpx5Sw2iPD4aJJt5NAQ'),
+
+  243: (ctx, actionNumber, isProd) =>
+    ctx.replyWithDocument(isProd ? 'BQACAgIAAxkBAAIz62YAAaqtKLz-dXx8DsSxLOS-os7hVwACTUUAAq81wEvUH3DnnD2cUzQE' : 'BQACAgIAAxkBAAIFZmYAAaq46c99W-QWIBDJ5Ybv3gy92gACTUUAAq81wEuZIrmHj6ItgTQE'),
+
+  244: (ctx, actionNumber, isProd) =>
+    ctx.replyWithVoice(isProd ? 'AwACAgIAAxkBAAIz7mYAAarA3tciiyoB_YowyuUb5CUnswAClD0AAghOCUiARZ1gcpGxYjQE' : 'AwACAgIAAxkBAAIFaWYAAarIeKVlY8aZ6flUdRJek8IQqQAClD0AAghOCUgQhPMpHlMeBjQE'),
 }
 
 module.exports = {
