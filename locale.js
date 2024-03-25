@@ -1,10 +1,10 @@
 const { Markup } = require("telegraf")
 
 // ID сообщений начала нового дня
-const NEW_DAY_MSG_IDS = [9, 19, 33, 43, 54, 67, 76, 86, 97, 107, 115, 126, 138, 150, 160, 168, 178, 192, 202, 212, 220, 231, 240, 248]
+const NEW_DAY_MSG_IDS = [9, 19, 33, 43, 54, 67, 76, 86, 97, 107, 115, 126, 138, 150, 160, 168, 178, 192, 202, 212, 220, 231, 240, 248, 259]
 
 // ID следующих сообщений, перед которыми было сообщение, на которые явно ждем ответ от пользователя (на остальные сообщения бот не будет продвигать по воронке)
-const WAIT_ANSWER_MSG_IDS = [6, 21, 34, 44, 55, 56, 65, 78, 80, 87, 98, 108, 116, 127, 139, 141, 151, 161, 169, 179, 188, 194, 203, 213, 221, 232, 241]
+const WAIT_ANSWER_MSG_IDS = [6, 21, 34, 44, 55, 56, 65, 78, 80, 87, 98, 108, 116, 127, 139, 141, 151, 161, 169, 179, 188, 194, 203, 213, 221, 232, 241, 249]
 
 const FUNNEL_MSG = [
   // ДЕНЬ 0
@@ -2329,6 +2329,99 @@ https://plus.yandex.ru/gift?promoName=referral&promocode=4AHQX4XNQZ`,
 Обязательно выполни все задания до завтра 🖤`,
       ],
     ],
+
+    // DAY 24
+    // 248 (ждем фото)
+    [
+      [
+`Одержимость Собой
+
+День 24
+
+Отправь отчет с выполненным заданием в ответном сообщении (фото, скрин)`,
+      ]
+    ],
+    // 249
+    [
+      [
+        `Твоя улыбка может растопить даже самое холодное сердце 🖤`,
+        Markup.inlineKeyboard([Markup.button.callback('Благодарю 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 250
+    [
+      [
+        `Сегодня тебя ждет "Техника внедрения новой роли" 🖤`,
+        Markup.inlineKeyboard([Markup.button.callback('Благодарю 🖤', 'next_msg')], { columns: 1 })
+      ]
+    ],
+    // 251 (audio)
+    [
+      [
+        `Подготовка к Технике внедрения новой роли 🖤`,
+        Markup.inlineKeyboard([Markup.button.callback('Прослушано 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 252 (audio)
+    [
+      [
+        `Техника внедрения новой роли 🖤`,
+        Markup.inlineKeyboard([Markup.button.callback('Прослушано 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 253
+    [
+      [
+`Запиши свои мысли в свой ежедневник:
+
+что ты чувствуешь после исполнения техники?`,
+        Markup.inlineKeyboard([Markup.button.callback('Записываю 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 254 (audio)
+    [
+      [
+        `Трансерфинг ЗА 78 ДНЕЙ ЗЕЛАНД “Мир, на тебе меня”`,
+        Markup.inlineKeyboard([Markup.button.callback('Готово!', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 255
+    [
+      [
+        `Запиши свои мысли в свой ежедневник на счет прослушанного. Какие мысли, чувства принесло это аудио? Как ты можешь это применить`,
+        Markup.inlineKeyboard([Markup.button.callback('Записываю 🖤', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 256
+    [
+      [
+`Привычки
+1. Планируем завтрашний день
+2. Не принимать алкоголь на время всего марафона
+3. Чтение 5 страниц в день
+4. Пробуждение
+5. Принимать душ дважды в день
+6. 10 Волшебных целей
+Новая привычка 🖤
+7. Не принимать пищу за 3 часа до сна`,
+        Markup.inlineKeyboard([Markup.button.callback('Готово!', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 257 (audio)
+    [
+      [
+        `Привычка - не принимать пищу за 3 часа до сна 🖤`,
+        Markup.inlineKeyboard([Markup.button.callback('Выполнено ✔️', 'next_msg')], { columns: 1 })
+      ],
+    ],
+    // 258
+    [
+      [
+`Встречаемся завтра здесь 😜
+
+Обязательно выполни все задания до завтра 🖤`,
+      ],
+    ],
   ]
 ]
 
@@ -2749,6 +2842,18 @@ const MEDIA_MSG = {
 
   244: (ctx, actionNumber, isProd) =>
     ctx.replyWithVoice(isProd ? 'AwACAgIAAxkBAAIz7mYAAarA3tciiyoB_YowyuUb5CUnswAClD0AAghOCUiARZ1gcpGxYjQE' : 'AwACAgIAAxkBAAIFaWYAAarIeKVlY8aZ6flUdRJek8IQqQAClD0AAghOCUgQhPMpHlMeBjQE'),
+
+  251: (ctx, actionNumber, isProd) =>
+    ctx.replyWithVoice(isProd ? 'AwACAgIAAxkBAAI0BmYCCtIotFYhEZkF00WMlFuGPtR0AALIXgAC5DAJSE91KRAudNRHNAQ' : 'AwACAgIAAxkBAAIFh2YCCrEwhnYexDPZvKHqgaCLLQF1AALIXgAC5DAJSI_9dB-gfqhFNAQ'),
+
+  252: (ctx, actionNumber, isProd) =>
+    ctx.replyWithVoice(isProd ? 'CQACAgIAAxkBAAI0D2YCDH5ksLSuafVRjuViCZKuS_FDAAIcSgAC7B4QSNsR030AAc0eTDQE' : 'CQACAgIAAxkBAAIFkGYCDGn-rcqawX-CnBt5IspQzDRNAAILUwACjmERSJpjbHMTV4iZNAQ'),
+
+  254: (ctx, actionNumber, isProd) =>
+    ctx.replyWithVoice(isProd ? 'AwACAgIAAxkBAAI0CWYCCtrLa5KSDL29ctumbIpsokCNAAIBXwAC5DAJSMU9PAry4oMSNAQ' : 'AwACAgIAAxkBAAIFimYCCrlEfYxTdoUyW6dERrql6R-qAAIBXwAC5DAJSMZabrGEtPxCNAQ'),
+
+  257: (ctx, actionNumber, isProd) =>
+    ctx.replyWithVoice(isProd ? 'AwACAgIAAxkBAAI0DGYCCuIvgJTOnxhNIU8iEv9-uhN8AAIXXwAC5DAJSKwMrYuEoEEvNAQ' : 'AwACAgIAAxkBAAIFjWYCCslcEsvjXOP9uWtjiJZvMuI8AAIXXwAC5DAJSIjv0H81X7dYNAQ'),
 }
 
 module.exports = {
